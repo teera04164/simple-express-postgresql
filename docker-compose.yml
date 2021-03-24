@@ -1,0 +1,24 @@
+version: "3.8"
+services:
+  postgres:
+    container_name: postgresDB
+    image: postgres
+    environment:
+      POSTGRES_USER: teera
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: mydatabase
+    ports:
+      - "5432:5432"
+
+  api:
+    container_name: api
+    build: .
+    depends_on:
+      - postgres
+    restart: on-failure
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgres://teera:1234@postgres:5432/mydatabase
+    ports:
+      - "5002:5002"
+    command: npm run start
